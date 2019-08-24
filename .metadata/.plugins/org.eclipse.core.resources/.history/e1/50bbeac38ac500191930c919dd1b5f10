@@ -1,0 +1,27 @@
+package com.premium.stc.controller;
+
+import java.sql.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.premium.stc.model.Sector;
+import com.premium.stc.service.SectorService;
+
+@RestController
+public class StockPriceRestController 
+{
+	@Autowired
+	SectorService sectorService;
+	
+	@GetMapping("/sectors/price/{sectorName}/{fromDate}/{toDate}")
+	public int getTotalStockPrice(@PathVariable("sectorName") String sectorName, @PathVariable("fromDate") Date fromDate, @PathVariable("toDate") Date toDate)
+	{
+	    int total = 0;
+	    
+	    Sector sector = sectorService.getSector(sectorName);
+	    return total;
+	}
+}

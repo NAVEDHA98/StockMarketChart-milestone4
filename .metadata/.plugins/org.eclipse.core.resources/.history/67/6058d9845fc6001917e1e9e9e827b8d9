@@ -1,0 +1,28 @@
+package com.premium.stc.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.premium.stc.model.Login;
+import com.premium.stc.model.User;
+
+@Controller
+public class UserController 
+{
+	@RequestMapping(path="/userLogin")
+	public String userLogin(Model model, method = RequestMethod.GET)
+	{
+		Login login = new Login();
+		model.addAttribute("login", login);
+		return "UserLogin";
+	}
+	
+	@RequestMapping(path="/userLoginProcess", method = RequestMethod.POST)
+	public String userLoginProcess(User user)
+	{
+		
+		return "redirect:userLogin";
+	}
+}

@@ -1,0 +1,23 @@
+package com.premium.stc.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.premium.stc.model.User;
+import com.premium.stc.service.UserService;
+
+@RestController
+public class UserRestController 
+{
+	@Autowired
+	UserService userService;
+	
+	@PostMapping("/user/signUp")
+	public User storeUserDetails(@RequestBody User user)
+	{
+		User userDetails = userService.addUser(user);
+		return userDetails;
+	}
+}

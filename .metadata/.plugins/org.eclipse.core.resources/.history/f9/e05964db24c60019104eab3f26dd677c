@@ -1,0 +1,16 @@
+package com.premium.stc.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.premium.stc.dao.*;
+import com.premium.stc.model.User;
+@Service
+public class UserServiceImpl implements UserService {
+	@Autowired
+	private UserDao userDao;
+
+	public User addUser(User user){
+		return userDao.save(new User(user.getUserId(),user.getUserName(),user.getPassword(),user.getUserType(),user.getEmail(),user.getMobileNumber(),user.getConfirmed()));
+	}
+}

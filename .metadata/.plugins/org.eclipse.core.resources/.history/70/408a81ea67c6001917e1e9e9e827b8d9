@@ -1,0 +1,70 @@
+package com.premium.stc.controller;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.premium.stc.dao.StockPriceDao;
+import com.premium.stc.model.Company;
+import com.premium.stc.model.Sector;
+import com.premium.stc.service.CompanyService;
+import com.premium.stc.service.SectorService;
+
+@RestController
+public class StockPriceController {
+	@Autowired
+	SectorService sectorService;
+	
+	@Autowired
+	CompanyService companyService;
+	
+	@Autowired
+	StockPriceService stockPriceService;
+	
+	@GetMapping("/company/stockprice/{companyName}/{fromDate}/{toDate}")
+	public List<Double> getCompanyStockprice(@PathVariable("companyName") String companyName,@PathVariable("fromDate") Date fromDate,@PathVariable("toDate") Date toDate)
+	{
+		Company company = companyService.getByCompanyName(companyName);
+		
+		int companyCode = company.getCompanyCode();
+		
+		List<Double> stockprice = stockPriceService.getStockPrice(companyCode,fromDate,toDate);
+		return stockprice;
+	} 
+	
+	@GetMapping("/sectors/price/{sectorName}/{fromDate}/{toDate}")
+	public double getTotalStockPrice(@PathVariable("sectorName") String sectorName, @PathVariable("fromDate") String fromDate, @PathVariable("toDate") String toDate) throws ParseException
+	{
+		DateFormat datefm = new SimpleDateFormat("dd-MM-yyyy");
+		
+		double total = 0;
+	    int[] companyCode = new int[10];
+	    
+	    List<Company> companies = new ArrayList<>();
+	    List<Double> stockPrice = new ArrayList<>();
+	    
+	    Sector sector = sectorService.getSector(sectorName);
+	    companyService.getCompanyList(sector.getSectorId()).forEach(companies::add);
+	    
+	    for(int i=0; i<companies.size();i++)
+	    {
+	    	companyCode[i] = companies.get(i).getCompanyCode();
+	    	stockPriceService.getStockPrice(companyCode[i], datefm.parse(fromDate), datefm.parse(toDate)).forEach(stockPrice::add);
+	    }
+	    
+	    for(int j=0; j<stockPrice.size(); j++)
+	    {
+	    	total = total + stockPrice.get(j);
+	    }
+	    
+	    return total;
+	}
+}

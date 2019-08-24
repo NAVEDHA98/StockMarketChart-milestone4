@@ -1,0 +1,14 @@
+package com.premium.stc.service;
+
+import java.util.List;
+
+import com.premium.stc.model.Sector;
+
+public interface SectorService {
+
+	public Sector getSector(String sectorName);
+	
+	public List<Sector> getSectorDetails() throws Exception;
+	
+	public Sector getAddedSectorDetails(Sector sector) throws Exception;
+}

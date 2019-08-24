@@ -1,0 +1,9 @@
+package com.premium.stc.dao;
+ 
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.premium.stc.model.StockPrice;
+
+public interface StockPriceDao extends JpaRepository<StockPrice, Integer>{
+      StockPrice findByCompanyCode(int companyCode);
+}

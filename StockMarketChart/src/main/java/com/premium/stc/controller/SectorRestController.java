@@ -1,0 +1,33 @@
+package com.premium.stc.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.premium.stc.model.Sector;
+import com.premium.stc.service.SectorService;
+
+@RestController
+public class SectorRestController 
+{
+      @Autowired
+      SectorService sectorService;
+      
+      @GetMapping("/sectorDetails/display")
+      public List<Sector> getSectorDetails() throws Exception
+      {
+    	  return sectorService.getSectorDetails();
+      }
+      
+      @GetMapping("sector/insert/{sectorId}/{sectorName}/{breif}")
+      public Sector getAddedSectorDetails(@PathVariable("sectorId") int sectorId, @PathVariable("sectorName") String sectorName, @PathVariable("brief") String brief) throws Exception
+      {
+    	  Sector sector = new Sector(sectorId, sectorName, brief);
+    	  return sectorService.getAddedSectorDetails(sector);
+      }
+      
+      
+}

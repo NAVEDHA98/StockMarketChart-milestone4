@@ -1,0 +1,55 @@
+package com.premium.stc.controller;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.premium.stc.model.Company;
+import com.premium.stc.model.Sector;
+import com.premium.stc.service.CompanyService;
+import com.premium.stc.service.SectorService;
+import com.premium.stc.service.StockPriceService;
+
+@RestController
+public class StockPriceRestController 
+{
+	@Autowired
+	SectorService sectorService;
+	
+	@Autowired
+	CompanyService companyService;
+	
+	@Autowired
+	StockPriceService stockPriceService;
+	
+	@GetMapping("/sectors/price/{sectorName}/{fromDate}/{toDate}")
+	public double getTotalStockPrice(@PathVariable("sectorName") String sectorName, @PathVariable("fromDate") Date fromDate, @PathVariable("toDate") Date toDate)
+	{
+	    double total = 0;
+	    int[] companyCode = new int[10];
+	    
+	    List<Company> companies = new ArrayList<>();
+	    List<Double> stockPrice = new ArrayList<>();
+	    
+	    Sector sector = sectorService.getSector(sectorName);
+	    companyService.getCompanyList(sector.getSectorId()).forEach(companies::add);
+	    
+	    for(int i=0; i<companies.size();i++)
+	    {
+	    	companyCode[i] = companies.get(i).getCompanyCode();
+	    	stockPriceService.getStockPrice(companyCode[i], fromDate, toDate).forEach(stockPrice::add);
+	    }
+	    
+	    for(int j=0; j<stockPrice.size(); j++)
+	    {
+	    	total = total + stockPrice.get(j);
+	    }
+	    
+	    return total;
+	}
+}
